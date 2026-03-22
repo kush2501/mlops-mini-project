@@ -25,6 +25,8 @@ repo_name = "mlops-mini-project"
 
 mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
 
+
+
 # logging configuration
 logger = logging.getLogger('model_evaluation')
 logger.setLevel('DEBUG')
@@ -117,6 +119,7 @@ def main():
     mlflow.set_experiment("dvc-pipeline")
     with mlflow.start_run() as run:  # Start an MLflow run
         try:
+            print("RUN ID:", run.info.run_id)
             clf = load_model('./models/model.pkl')
             test_data = load_data('./data/processed/test_bow.csv')
             
@@ -138,11 +141,17 @@ def main():
                     mlflow.log_param(param_name, param_value)
             
             # Log model to MLflow
-            mlflow.sklearn.log_model(clf, "model")
+            print("🔥 BEFORE LOG MODEL")
+            mlflow.sklearn.log_model(clf, name="model")
+            print("🔥 AFTER LOG MODEL")
             
-            # Save model info
+            # Save model info(such as run_id and path).
             save_model_info(run.info.run_id, "model", 'reports/experiment_info.json')
-            
+            print("MODEL_EVALUATION_FILE RUN ID:", run.info.run_id)
+
+            with open('reports/experiment_info.json') as f:
+                print("FILE CONTENT:", f.read())
+
             # Log the metrics file to MLflow
             mlflow.log_artifact('reports/metrics.json')
 
