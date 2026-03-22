@@ -141,16 +141,16 @@ def main():
                     mlflow.log_param(param_name, param_value)
             
             # Log model to MLflow
-            print("🔥 BEFORE LOG MODEL")
+            #print("🔥 BEFORE LOG MODEL")
             mlflow.sklearn.log_model(clf, name="model")
-            print("🔥 AFTER LOG MODEL")
+            #print("🔥 AFTER LOG MODEL")
             
             # Save model info(such as run_id and path).
             save_model_info(run.info.run_id, "model", 'reports/experiment_info.json')
-            print("MODEL_EVALUATION_FILE RUN ID:", run.info.run_id)
+            #print("MODEL_EVALUATION_FILE RUN ID:", run.info.run_id)
 
-            with open('reports/experiment_info.json') as f:
-                print("FILE CONTENT:", f.read())
+            #with open('reports/experiment_info.json') as f:
+                #print("FILE CONTENT:", f.read())
 
             # Log the metrics file to MLflow
             mlflow.log_artifact('reports/metrics.json')

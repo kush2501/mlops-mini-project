@@ -74,10 +74,10 @@ def register_model(model_name, model_info):
         )
 
         # Verify.
-        print("ALIAS SET FOR VERSION:", model_version.version)
-        print("Tracking URI:", mlflow.get_tracking_uri())
+        #print("ALIAS SET FOR VERSION:", model_version.version)
+        #print("Tracking URI:", mlflow.get_tracking_uri())
         
-        print(f"✅ Model registered. Version: {model_version.version}")
+        #print(f"✅ Model registered. Version: {model_version.version}")
 
         # Transition the model to "Staging"
         client = mlflow.tracking.MlflowClient()
@@ -88,9 +88,6 @@ def register_model(model_name, model_info):
         version=model_version.version)
 
         logger.debug(f'Model {model_name} version {model_version.version} registered and transitioned to Staging.')
-    
-    except Exception as e:
-        print(f"❌ Error: {e}")
 
 
     except Exception as e:
@@ -101,7 +98,7 @@ def main():
     try:
         model_info_path = 'reports/experiment_info.json'
         model_info = load_model_info(model_info_path)
-        print("MODEL_INFORMATION :", model_info)
+        #print("MODEL_INFORMATION :", model_info)
         
         model_name = "model"
         register_model(model_name, model_info)
