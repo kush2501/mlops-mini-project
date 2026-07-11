@@ -41,3 +41,10 @@ stages:
     - src/model/model_evaluation.py
     metrics:
     - reports/metrics.json
+    - artifacts/run_info.json
+
+  model_register:
+   cmd: python src/model/model_register.py
+   deps:
+   - artifacts/run_info.json
+   - src/model/model_register.py

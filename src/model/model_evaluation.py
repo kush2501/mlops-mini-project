@@ -2,11 +2,12 @@ import os
 import pickle
 import json
 import logging
+from datetime import datetime
+
 import pandas as pd
 import mlflow
 import mlflow.sklearn
 import dagshub
-
 
 from sklearn.metrics import (
     accuracy_score,
@@ -14,8 +15,6 @@ from sklearn.metrics import (
     recall_score,
     f1_score,
 )
-
-
 
 # -------------------- Logger -------------------- #
 
@@ -133,10 +132,9 @@ def save_metrics(metrics):
 
         os.makedirs("reports", exist_ok=True)
 
-
         with open("./reports/metrics.json", "w") as file:
             json.dump(metrics, file, indent=4)
-            
+
         logger.info("Metrics saved successfully.")
 
     except Exception:
@@ -147,7 +145,6 @@ def save_metrics(metrics):
 
 # -------------------- Main -------------------- #
 
-
 def main():
 
     try:
@@ -156,6 +153,7 @@ def main():
         logger.info("Model Evaluation Pipeline Started")
 
         # -------------------- DagsHub + MLflow -------------------- #
+
         mlflow.set_tracking_uri(
             "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
         )
@@ -168,39 +166,63 @@ def main():
 
         mlflow.set_experiment("dvc-pipeline")
 
-        with mlflow.start_run(run_name="model_evaluation"):
+        with mlflow.start_run(run_name="model_evaluation") as run:
 
-            # Load Data
+            # -------------------- Load Data -------------------- #
+
             X_test, y_test = load_test_data()
 
-            # Load Model
+            # -------------------- Load Model -------------------- #
+
             model = load_model()
 
-            # Evaluate Model
+            # -------------------- Evaluate Model -------------------- #
+
             metrics = evaluate_model(
                 model,
                 X_test,
                 y_test
             )
 
-            # Save Metrics
+            # -------------------- Save Metrics -------------------- #
+
             save_metrics(metrics)
 
             # -------------------- Log Metrics -------------------- #
+
             mlflow.log_metrics(metrics)
 
             # -------------------- Log Parameters -------------------- #
+
             mlflow.log_params(model.get_params())
+
+            # -------------------- Log Model -------------------- #
 
             mlflow.sklearn.log_model(
                 sk_model=model,
                 artifact_path="model"
-                    )
-
+            )
 
             # -------------------- Log Artifacts -------------------- #
+
             mlflow.log_artifact("reports/metrics.json")
             mlflow.log_artifact("models/model.pkl")
+
+            # -------------------- Save Run Information -------------------- #
+
+            os.makedirs("artifacts", exist_ok=True)
+
+            run_info = {
+                "run_id": run.info.run_id,
+                "experiment_id": run.info.experiment_id,
+                "model_name": "model",
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            with open("artifacts/run_info.json", "w") as file:
+                json.dump(run_info, file, indent=4)
+
+            logger.info("Run information saved successfully.")
 
             logger.info("MLflow logging completed successfully.")
 
