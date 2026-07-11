@@ -1,0 +1,6 @@
+[core]
+    remote = storage
+['remote "myremote"']
+    url = C:\Users\kush6\AppData\Local\Temp
+['remote "storage"']
+    url = D:\DVC_Remote_Storage

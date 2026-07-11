@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/3da863321f564f08be8a653aade3dc17/artifacts
+end_time: 1783746586326
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3da863321f564f08be8a653aade3dc17
+run_name: model_building
+run_uuid: 3da863321f564f08be8a653aade3dc17
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783746584684
+status: 4
+tags: []
+user_id: kush6
