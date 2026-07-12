@@ -1,37 +1,35 @@
 import os
 import yaml
-import pandas as pd
+import pickle
 import logging
+import pandas as pd
 
 from sklearn.feature_extraction.text import CountVectorizer
 
+# -------------------- Logger -------------------- #
 
-import logging
-import os
-
-# Create logs folder
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# Log file path
 LOG_FILE = os.path.join(LOG_DIR, "project.log")
 
-# Configure Logger
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE),   # Save logs in file
-        logging.StreamHandler()          # Show logs in terminal
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
     ]
 )
 
 logger = logging.getLogger(__name__)
 
-# Load Parameters
+# -------------------- Load Parameters -------------------- #
+
 def load_params(params_path: str) -> int:
 
     try:
+
         logger.info("Loading parameters from params.yaml...")
 
         with open(params_path, "r") as file:
@@ -44,14 +42,17 @@ def load_params(params_path: str) -> int:
         return max_features
 
     except Exception:
+
         logger.exception("Failed to load parameters.")
         raise
 
 
-# Load Processed Data
-def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+# -------------------- Load Data -------------------- #
+
+def load_data():
 
     try:
+
         logger.info("Loading processed datasets...")
 
         train_data = pd.read_csv("./data/interim/train_processed.csv")
@@ -63,19 +64,22 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
         return train_data, test_data
 
     except Exception:
+
         logger.exception("Failed to load processed datasets.")
         raise
 
 
-# Apply Bag of Words
+# -------------------- Apply Bag Of Words -------------------- #
+
 def apply_bow(
-    train_df: pd.DataFrame,
-    test_df: pd.DataFrame,
-    max_features: int
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+    train_df,
+    test_df,
+    max_features
+):
 
     try:
-        logger.info("Applying BagofWords...")
+
+        logger.info("Applying Bag of Words...")
 
         X_train = train_df["content"].values
         y_train = train_df["sentiment"].values
@@ -88,7 +92,7 @@ def apply_bow(
         )
 
         X_train_bow = vectorizer.fit_transform(X_train)
-        X_test_bow= vectorizer.transform(X_test)
+        X_test_bow = vectorizer.transform(X_test)
 
         train_bow = pd.DataFrame(X_train_bow.toarray())
         train_bow["label"] = y_train
@@ -96,24 +100,24 @@ def apply_bow(
         test_bow = pd.DataFrame(X_test_bow.toarray())
         test_bow["label"] = y_test
 
-        logger.info("Bow completed.")
+        logger.info("Bag of Words completed.")
         logger.info(f"Vocabulary Size : {len(vectorizer.vocabulary_)}")
 
-        return train_bow, test_bow
+        return train_bow, test_bow, vectorizer
 
     except Exception:
+
         logger.exception("Error while applying Bag of Words.")
         raise
 
 
-# Save Feature Data
-def save_data(
-    train_df: pd.DataFrame,
-    test_df: pd.DataFrame
-) -> None:
+# -------------------- Save Feature Data -------------------- #
+
+def save_data(train_df, test_df):
 
     try:
-        logger.info("Saving feature-engineered datasets...")
+
+        logger.info("Saving feature datasets...")
 
         data_path = os.path.join("data", "processed")
 
@@ -129,14 +133,37 @@ def save_data(
             index=False
         )
 
-        logger.info("Datasets saved successfully.")
+        logger.info("Feature datasets saved successfully.")
 
     except Exception:
+
         logger.exception("Failed to save feature datasets.")
         raise
 
 
-# Main Function
+# -------------------- Save Vectorizer -------------------- #
+
+def save_vectorizer(vectorizer):
+
+    try:
+
+        logger.info("Saving CountVectorizer...")
+
+        os.makedirs("artifacts", exist_ok=True)
+
+        with open("./artifacts/vectorizer.pkl", "wb") as file:
+            pickle.dump(vectorizer, file)
+
+        logger.info("Vectorizer saved successfully.")
+
+    except Exception:
+
+        logger.exception("Failed to save vectorizer.")
+        raise
+
+
+# -------------------- Main -------------------- #
+
 def main():
 
     try:
@@ -148,26 +175,29 @@ def main():
 
         train_data, test_data = load_data()
 
-        train_bow, test_bow = apply_bow(
+        train_bow, test_bow, vectorizer = apply_bow(
             train_data,
             test_data,
             max_features
         )
 
-        save_data(train_bow, test_bow)
-
-        logger.info(
-            f"Train Feature Shape : {train_bow.shape}"
+        save_data(
+            train_bow,
+            test_bow
         )
 
-        logger.info(
-            f"Test Feature Shape : {test_bow.shape}"
+        save_vectorizer(
+            vectorizer
         )
 
-        logger.info("Feature Engineering Completed Successfully")
+        logger.info(f"Train Feature Shape : {train_bow.shape}")
+        logger.info(f"Test Feature Shape : {test_bow.shape}")
+
+        logger.info("Feature Engineering Completed Successfully.")
         logger.info("=" * 60)
 
     except Exception:
+
         logger.exception("Feature Engineering Pipeline Failed.")
         raise
 

@@ -71,7 +71,7 @@ def load_model():
 
         logger.info("Loading trained model...")
 
-        with open("./models/model.pkl", "rb") as file:
+        with open("./artifacts/model.pkl", "rb") as file:
             model = pickle.load(file)
 
         logger.info("Model loaded successfully.")
@@ -206,7 +206,7 @@ def main():
             # -------------------- Log Artifacts -------------------- #
 
             mlflow.log_artifact("reports/metrics.json")
-            mlflow.log_artifact("models/model.pkl")
+            mlflow.log_artifact("artifacts/model.pkl")
 
             # -------------------- Save Run Information -------------------- #
 
