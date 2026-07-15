@@ -1,0 +1,4 @@
+-r base.txt
+
+mlflow==2.22.0
+dagshub==0.7.0

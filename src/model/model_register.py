@@ -53,7 +53,8 @@ def load_run_info():
 
 def register_model(run_info):
     """
-    Register MLflow model using Run ID.
+    Register MLflow model using Run ID
+    and move the newly registered model to Staging.
     """
 
     try:
@@ -68,10 +69,11 @@ def register_model(run_info):
         logger.info(f"Run ID      : {run_id}")
         logger.info(f"Model URI   : {model_uri}")
 
+        # Register Model
         registered_model = mlflow.register_model(
-        model_uri=model_uri,
-        name=model_name
-            )
+            model_uri=model_uri,
+            name=model_name
+        )
 
         version = registered_model.version
 
@@ -79,15 +81,135 @@ def register_model(run_info):
         logger.info("Model Registered Successfully")
         logger.info(f"Registered Model : {model_name}")
         logger.info(f"Version          : {version}")
+
+        # -------------------------------------------------------
+        # Move Newly Registered Model to Staging
+        # -------------------------------------------------------
+
+        client.transition_model_version_stage(
+            name=model_name,
+            version=version,
+            stage="Staging",
+            archive_existing_versions=False
+        )
+
+        logger.info(f"Stage            : Staging")
+
+        # Compare with Production and Promote if Better
+        # -------------------------------------------------------
+        promote_best_model(model_name, version)
+        
         logger.info("=" * 60)
 
-       
-
     except Exception:
-
         logger.exception("Model Registration Failed")
         raise
 
+
+def promote_best_model(model_name, new_version):
+    """
+    Compare the newly registered model with the current Production model.
+    If the new model has better accuracy, move it to Production and archive
+    the old Production model. Otherwise keep it in Staging.
+    """
+
+    try:
+
+        client = MlflowClient()
+
+        logger.info("=" * 60)
+        logger.info("Checking Production Model")
+
+        # ------------------------------
+        # New model accuracy
+        # ------------------------------
+
+        new_version_info = client.get_model_version(
+            name=model_name,
+            version=new_version
+        )
+
+        new_run = client.get_run(new_version_info.run_id)
+
+        new_accuracy = float(
+            new_run.data.metrics.get("accuracy", 0)
+        )
+
+        logger.info(f"New Accuracy : {new_accuracy}")
+
+        # ------------------------------
+        # Production model
+        # ------------------------------
+
+        production_versions = client.get_latest_versions(
+            model_name,
+            stages=["Production"]
+        )
+
+        # -----------------------------------
+        # First Production Model
+        # -----------------------------------
+
+        if len(production_versions) == 0:
+
+            client.transition_model_version_stage(
+                name=model_name,
+                version=new_version,
+                stage="Production"
+            )
+
+            logger.info("No Production Model Found.")
+            logger.info("Current Model Promoted to Production.")
+
+            return
+
+        # -----------------------------------
+        # Existing Production
+        # -----------------------------------
+
+        production = production_versions[0]
+
+        production_run = client.get_run(production.run_id)
+
+        production_accuracy = float(
+            production_run.data.metrics.get("accuracy", 0)
+        )
+
+        logger.info(
+            f"Production Accuracy : {production_accuracy}"
+        )
+
+        # -----------------------------------
+        # Compare Accuracy
+        # -----------------------------------
+
+        if new_accuracy > production_accuracy:
+
+            client.transition_model_version_stage(
+                name=model_name,
+                version=production.version,
+                stage="Archived"
+            )
+
+            client.transition_model_version_stage(
+                name=model_name,
+                version=new_version,
+                stage="Production"
+            )
+
+            logger.info("Better Model Found")
+            logger.info("Old Production Archived")
+            logger.info("New Model Promoted to Production")
+
+        else:
+
+            logger.info("Current Production Model is Better")
+            logger.info("New Model remains in Staging")
+
+    except Exception:
+
+        logger.exception("Promotion Failed")
+        raise
 
 # -------------------- Main -------------------- #
 
