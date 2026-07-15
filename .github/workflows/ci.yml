@@ -1,0 +1,31 @@
+name: Emotion Detection CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  setup:
+    runs-on: ubuntu-lates
+
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Check Python python-version
+      run : python --version
+
+    - name: Upgrade pip
+      run: Python -m pip install --upgrade pip
