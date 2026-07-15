@@ -17,3 +17,5 @@ requests==2.34.2
 tqdm==4.68.4
 
 dvc[s3]==3.48.4
+
+pathspec==0.12.1
