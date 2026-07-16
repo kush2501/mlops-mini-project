@@ -70,5 +70,8 @@ jobs:
           python -m pytest tests/test_flask_app.py -v
 
       - name: Run DVC Pipeline
+        env:
+          DAGSHUB_USERNAME: kush2501
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
         run: |
           dvc repro
