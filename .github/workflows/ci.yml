@@ -68,3 +68,7 @@ jobs:
       - name: Run Flask Tests
         run: |
           python -m pytest tests/test_flask_app.py -v
+
+      - name: Run DVC Pipeline
+        run: |
+          dvc repro
