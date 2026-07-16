@@ -188,11 +188,7 @@ def main():
             "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
         )
 
-        dagshub.init(
-            repo_owner="kush2501",
-            repo_name="mlops-mini-project",
-            mlflow=True
-        )
+       
 
         mlflow.set_experiment("dvc-pipeline")
 
