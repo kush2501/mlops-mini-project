@@ -71,7 +71,7 @@ jobs:
 
       - name: Debug Secrets
         env:
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
         run: |
           if [ -z "$DAGSHUB_TOKEN" ]; then
             echo "TOKEN NOT FOUND"
