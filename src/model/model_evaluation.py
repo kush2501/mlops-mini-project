@@ -9,6 +9,7 @@ import mlflow
 import mlflow.sklearn
 import dagshub
 
+from mlflow.models import infer_signature
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -97,6 +98,10 @@ def evaluate_model(model, X_test, y_test):
 
         y_pred = model.predict(X_test)
 
+        # Signature.
+        signature = infer_signature(
+            pd.DataFrame(X_test), y_pred)
+
         metrics = {
 
             "accuracy": float(accuracy_score(y_test, y_pred)),
@@ -111,7 +116,7 @@ def evaluate_model(model, X_test, y_test):
         logger.info(f"Recall    : {metrics['recall']:.4f}")
         logger.info(f"F1 Score  : {metrics['f1_score']:.4f}")
 
-        return metrics
+        return metrics, signature
 
     except Exception:
 
@@ -178,7 +183,7 @@ def main():
 
             # -------------------- Evaluate Model -------------------- #
 
-            metrics = evaluate_model(
+            metrics, signature = evaluate_model(
                 model,
                 X_test,
                 y_test
@@ -197,12 +202,14 @@ def main():
             mlflow.log_params(model.get_params())
 
             # -------------------- Log Model -------------------- #
+            input_example = pd.DataFrame(X_test[:5])
 
             mlflow.sklearn.log_model(
                 sk_model=model,
-                artifact_path="model"
+                artifact_path="model",
+                signature=signature,
+                input_example=input_example
             )
-
             # -------------------- Log Artifacts -------------------- #
 
             mlflow.log_artifact("reports/metrics.json")
