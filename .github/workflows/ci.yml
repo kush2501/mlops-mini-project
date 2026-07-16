@@ -64,3 +64,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           python -m pytest tests -v
+
+      - name: Run Flask Tests
+        run: |
+          python -m pytest tests/test_flask_app.py -v
