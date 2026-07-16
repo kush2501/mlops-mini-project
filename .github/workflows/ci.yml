@@ -69,6 +69,17 @@ jobs:
         run: |
           python -m pytest tests/test_flask_app.py -v
 
+      - name: Debug Secrets
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
+        run: |
+          if [ -z "$DAGSHUB_TOKEN" ]; then
+            echo "TOKEN NOT FOUND"
+            exit 1
+          else
+            echo "TOKEN FOUND"
+          fi
+
       - name: Run DVC Pipeline
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
