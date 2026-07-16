@@ -73,7 +73,7 @@ jobs:
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
         run: |
-          if [ -z "$DAGSHUB_ACTION" ]; then
+          if [ -z "$DAGSHUB_TOKEN" ]; then
             echo "TOKEN NOT FOUND"
             exit 1
           else
