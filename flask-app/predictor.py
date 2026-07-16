@@ -1,19 +1,30 @@
 import pickle
+import mlflow
+import mlflow.sklearn
 
 from preprocessing import preprocess_text
 
-# -------------------- Load Model -------------------- #
+# Tracking URI.
+mlflow.set_tracking_uri(
+    "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
+)
 
-with open("../artifacts/model.pkl", "rb") as file:
-    model = pickle.load(file)
+
+# -------------------- Load Model -------------------- #
+model = mlflow.sklearn.load_model("models:/model/Production")
+
+print("Expected Features:", model.n_features_in_)
 
 # -------------------- Load Vectorizer -------------------- #
 
 with open("../artifacts/vectorizer.pkl", "rb") as file:
     vectorizer = pickle.load(file)
+   
+    print(len(vectorizer.vocabulary_))
 
 
 # -------------------- Predict -------------------- #
+
 
 def predict_sentiment(text: str):
 

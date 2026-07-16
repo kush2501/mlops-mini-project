@@ -86,7 +86,7 @@ stages:
     outs:
     - path: artifacts/run_info.json
       hash: md5
-      md5: 7d365f615e3dee41bf1b36bc93c80907
+      md5: e6734063882c9fe405d53523f92db15e
       size: 150
     - path: reports/metrics.json
       hash: md5
@@ -97,7 +97,7 @@ stages:
     deps:
     - path: artifacts/run_info.json
       hash: md5
-      md5: 7d365f615e3dee41bf1b36bc93c80907
+      md5: e6734063882c9fe405d53523f92db15e
       size: 150
     - path: src/model/model_register.py
       hash: md5
