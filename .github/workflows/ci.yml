@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: 'pip'
 
       - name: Verify Python Version
         run: python --version
@@ -39,10 +40,18 @@ jobs:
         run: |
           pip install -r requirements/ci.txt
 
+      - name: Check Dependency Conflicts
+        run: |
+          pip check
+
       - name: Verify Installation
         run: |
-          python -c "import numpy, pandas, sklearn, flask, nltk, xgboost; print('Dependencies Installed Successfully')"
+          python -c "import numpy, pandas, sklearn, flask, nltk, xgboost, mlflow; print('Dependencies Installed Successfully')"
 
       - name: Check DVC
         run: |
           dvc version
+          dvc doctor
+      - name: Check Python Syntax
+        run: |
+          python -m compileall src
