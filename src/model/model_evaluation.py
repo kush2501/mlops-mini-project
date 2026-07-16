@@ -172,38 +172,33 @@ def main():
         logger.info("=" * 60)
         logger.info("Model Evaluation Pipeline Started")
 
-        # -------------------- DagsHub Authentication -------------------- #
+    # -------------------- DagsHub Authentication -------------------- #
 
         os.environ["MLFLOW_TRACKING_USERNAME"] = "kush2501"
-
-        print("=" * 50)
-        print("DEBUG")
-        print("DAGSHUB_TOKEN:", os.getenv("DAGSHUB_TOKEN"))
-        print("All DAGSHUB env vars:")
-        for k, v in os.environ.items():
-            if "DAGSHUB" in k or "MLFLOW" in k:
-                print(k, "=", "***" if "TOKEN" in k or "PASSWORD" in k else v)
-        print("=" * 50)
 
         token = os.getenv("DAGSHUB_TOKEN")
 
         if token is None:
-            raise ValueError(
-                "DAGSHUB_TOKEN environment variable is not set."
-            )
+            raise ValueError("DAGSHUB_TOKEN environment variable is not set.")
 
         os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
+        # Register token with DagsHub client
+        dagshub.auth.add_app_token(token)
+
+        # MLflow Tracking URI
         mlflow.set_tracking_uri(
             "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
         )
 
+        # Initialize DagsHub
         dagshub.init(
             repo_owner="kush2501",
             repo_name="mlops-mini-project",
             mlflow=True
         )
 
+        
         mlflow.set_experiment("dvc-pipeline")
 
         with mlflow.start_run(run_name="model_evaluation") as run:
