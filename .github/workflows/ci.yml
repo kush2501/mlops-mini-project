@@ -80,6 +80,13 @@ jobs:
             echo "TOKEN FOUND"
           fi
 
+      - name: Debug DagsHub Auth
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
+        run: |
+          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_TOKEN') is not None)"
+          python -c "import dagshub; print('DagsHub Version:', dagshub.__version__)"
+          
       - name: Run DVC Pipeline
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
