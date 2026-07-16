@@ -3,6 +3,7 @@ import pickle
 import json
 import logging
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import mlflow
@@ -35,6 +36,19 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# -------------------- Project Root -------------------- #
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+DATA_DIR = BASE_DIR / "data"
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
+REPORTS_DIR = BASE_DIR / "reports"
+
+MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
+RUN_INFO_PATH = ARTIFACTS_DIR / "run_info.json"
+METRICS_PATH = REPORTS_DIR / "metrics.json"
+TEST_DATA_PATH = DATA_DIR / "processed" / "test_bow.csv"
+
 # -------------------- Load Test Data -------------------- #
 
 def load_test_data():
@@ -46,7 +60,7 @@ def load_test_data():
 
         logger.info("Loading test dataset...")
 
-        test_df = pd.read_csv("./data/processed/test_bow.csv")
+        test_df = pd.read_csv(TEST_DATA_PATH)
 
         logger.info(f"Test Shape : {test_df.shape}")
 
@@ -72,7 +86,7 @@ def load_model():
 
         logger.info("Loading trained model...")
 
-        with open("./artifacts/model.pkl", "rb") as file:
+        with open(MODEL_PATH, "rb") as file:
             model = pickle.load(file)
 
         logger.info("Model loaded successfully.")
@@ -135,9 +149,9 @@ def save_metrics(metrics):
 
         logger.info("Saving evaluation metrics...")
 
-        os.makedirs("reports", exist_ok=True)
+        REPORTS_DIR.mkdir(exist_ok=True)
 
-        with open("./reports/metrics.json", "w") as file:
+        with open(METRICS_PATH, "w") as file:
             json.dump(metrics, file, indent=4)
 
         logger.info("Metrics saved successfully.")
@@ -212,12 +226,11 @@ def main():
             )
             # -------------------- Log Artifacts -------------------- #
 
-            mlflow.log_artifact("reports/metrics.json")
-            mlflow.log_artifact("artifacts/model.pkl")
-
+            mlflow.log_artifact(str(METRICS_PATH))
+            mlflow.log_artifact(str(MODEL_PATH))
             # -------------------- Save Run Information -------------------- #
 
-            os.makedirs("artifacts", exist_ok=True)
+            ARTIFACTS_DIR.mkdir(exist_ok=True)
 
             run_info = {
                 "run_id": run.info.run_id,
@@ -226,7 +239,8 @@ def main():
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
 
-            with open("artifacts/run_info.json", "w") as file:
+          
+            with open(RUN_INFO_PATH, "w") as file:
                 json.dump(run_info, file, indent=4)
 
             logger.info("Run information saved successfully.")

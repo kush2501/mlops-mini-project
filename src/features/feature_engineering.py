@@ -4,6 +4,7 @@ import pickle
 import logging
 import pandas as pd
 
+from pathlib import Path
 from sklearn.feature_extraction.text import CountVectorizer
 
 # -------------------- Logger -------------------- #
@@ -23,6 +24,10 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+# -------------------- Project Root -------------------- #
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # -------------------- Load Parameters -------------------- #
 
@@ -55,8 +60,11 @@ def load_data():
 
         logger.info("Loading processed datasets...")
 
-        train_data = pd.read_csv("./data/interim/train_processed.csv")
-        test_data = pd.read_csv("./data/interim/test_processed.csv")
+        TRAIN_DATA_PATH = BASE_DIR / "data" / "interim" / "train_processed.csv"
+        TEST_DATA_PATH = BASE_DIR / "data" / "interim" / "test_processed.csv"
+
+        train_data = pd.read_csv(TRAIN_DATA_PATH)
+        test_data = pd.read_csv(TEST_DATA_PATH)
 
         logger.info(f"Train Shape : {train_data.shape}")
         logger.info(f"Test Shape : {test_data.shape}")
@@ -119,17 +127,16 @@ def save_data(train_df, test_df):
 
         logger.info("Saving feature datasets...")
 
-        data_path = os.path.join("data", "processed")
-
-        os.makedirs(data_path, exist_ok=True)
+        DATA_PATH = BASE_DIR / "data" / "processed"
+        DATA_PATH.mkdir(parents=True, exist_ok=True)
 
         train_df.to_csv(
-            os.path.join(data_path, "train_bow.csv"),
+            DATA_PATH / "train_bow.csv",
             index=False
         )
 
         test_df.to_csv(
-            os.path.join(data_path, "test_bow.csv"),
+            DATA_PATH / "test_bow.csv",
             index=False
         )
 
@@ -149,9 +156,12 @@ def save_vectorizer(vectorizer):
 
         logger.info("Saving CountVectorizer...")
 
-        os.makedirs("artifacts", exist_ok=True)
+        ARTIFACTS_DIR = BASE_DIR / "artifacts"
+        ARTIFACTS_DIR.mkdir(exist_ok=True)
 
-        with open("./artifacts/vectorizer.pkl", "wb") as file:
+        VECTORIZER_PATH = ARTIFACTS_DIR / "vectorizer.pkl"
+
+        with open(VECTORIZER_PATH, "wb") as file:
             pickle.dump(vectorizer, file)
 
         logger.info("Vectorizer saved successfully.")
@@ -171,7 +181,8 @@ def main():
         logger.info("=" * 60)
         logger.info("Feature Engineering Pipeline Started")
 
-        max_features = load_params("params.yaml")
+        PARAMS_PATH = BASE_DIR / "params.yaml"
+        max_features = load_params(PARAMS_PATH)
 
         train_data, test_data = load_data()
 

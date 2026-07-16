@@ -3,6 +3,7 @@ import pickle
 import logging
 import pandas as pd
 
+from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 
 
@@ -24,6 +25,10 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# -------------------- Project Root -------------------- #
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 # -------------------- Load Data -------------------- #
 
@@ -36,7 +41,9 @@ def load_data():
 
         logger.info("Loading feature dataset...")
 
-        train_data = pd.read_csv("./data/processed/train_bow.csv")
+        TRAIN_DATA_PATH = BASE_DIR / "data" / "processed" / "train_bow.csv"
+
+        train_data = pd.read_csv(TRAIN_DATA_PATH)
 
         logger.info(f"Train Shape : {train_data.shape}")
 
@@ -110,16 +117,17 @@ def save_model(model):
 
     try:
 
-        logger.info("Saving trained model...")
+        ARTIFACTS_DIR = BASE_DIR / "artifacts"
+        ARTIFACTS_DIR.mkdir(exist_ok=True)
 
-        os.makedirs("artifacts", exist_ok=True)
+        MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
 
-        model_path = "./artifacts/model.pkl"
-
-        with open(model_path, "wb") as file:
+        with open(MODEL_PATH, "wb") as file:
             pickle.dump(model, file)
+            
 
-        logger.info(f"Model saved successfully at {model_path}")
+        logger.info(f"Model saved successfully at {MODEL_PATH}")
+
 
     except Exception:
 
