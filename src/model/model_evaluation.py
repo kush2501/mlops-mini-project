@@ -1,3 +1,4 @@
+import dagshub.auth
 import os
 import pickle
 import json
@@ -188,7 +189,15 @@ def main():
             "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
         )
 
-       
+        print("TOKEN:", os.getenv("DAGSHUB_TOKEN") is not None)
+        print("MLFLOW USER:", os.getenv("MLFLOW_TRACKING_USERNAME"))
+        print("MLFLOW PASS:", os.getenv("MLFLOW_TRACKING_PASSWORD") is not None)
+        
+        dagshub.init(
+            repo_owner="kush2501",
+            repo_name="mlops-mini-project",
+            mlflow=True
+        )
 
         mlflow.set_experiment("dvc-pipeline")
 
