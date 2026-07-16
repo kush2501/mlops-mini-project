@@ -202,7 +202,7 @@ def main():
             mlflow.log_params(model.get_params())
 
             # -------------------- Log Model -------------------- #
-            input_example = pd.DataFrame(X_test[:5])
+            input_example = pd.DataFrame(X_test[:5])    
 
             mlflow.sklearn.log_model(
                 sk_model=model,

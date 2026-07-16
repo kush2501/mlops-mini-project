@@ -56,6 +56,11 @@ jobs:
         run: |
           dvc version
           dvc doctor
+          
       - name: Check Python Syntax
         run: |
           python -m compileall src
+      
+      - name: Run Unit Tests
+        run: |
+          pytest tests -v
