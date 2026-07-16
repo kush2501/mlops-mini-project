@@ -176,6 +176,15 @@ def main():
 
         os.environ["MLFLOW_TRACKING_USERNAME"] = "kush2501"
 
+        print("=" * 50)
+        print("DEBUG")
+        print("DAGSHUB_TOKEN:", os.getenv("DAGSHUB_ACTION"))
+        print("All DAGSHUB env vars:")
+        for k, v in os.environ.items():
+            if "DAGSHUB" in k or "MLFLOW" in k:
+                print(k, "=", "***" if "TOKEN" in k or "PASSWORD" in k else v)
+        print("=" * 50)
+
         token = os.getenv("DAGSHUB_ACTION")
 
         if token is None:
@@ -189,10 +198,6 @@ def main():
             "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
         )
 
-        print("TOKEN:", os.getenv("DAGSHUB_TOKEN") is not None)
-        print("MLFLOW USER:", os.getenv("MLFLOW_TRACKING_USERNAME"))
-        print("MLFLOW PASS:", os.getenv("MLFLOW_TRACKING_PASSWORD") is not None)
-        
         dagshub.init(
             repo_owner="kush2501",
             repo_name="mlops-mini-project",
