@@ -178,18 +178,18 @@ def main():
 
         print("=" * 50)
         print("DEBUG")
-        print("DAGSHUB_ACTION:", os.getenv("DAGSHUB_ACTION"))
+        print("DAGSHUB_TOKEN:", os.getenv("DAGSHUB_TOKEN"))
         print("All DAGSHUB env vars:")
         for k, v in os.environ.items():
             if "DAGSHUB" in k or "MLFLOW" in k:
                 print(k, "=", "***" if "TOKEN" in k or "PASSWORD" in k else v)
         print("=" * 50)
 
-        token = os.getenv("DAGSHUB_ACTION")
+        token = os.getenv("DAGSHUB_TOKEN")
 
         if token is None:
             raise ValueError(
-                "DAGSHUB_ACTION environment variable is not set."
+                "DAGSHUB_TOKEN environment variable is not set."
             )
 
         os.environ["MLFLOW_TRACKING_PASSWORD"] = token

@@ -84,7 +84,7 @@ jobs:
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
         run: |
-          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_ACTION') is not None)"
+          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_TOKEN') is not None)"
           python -c "import dagshub; print('DagsHub Version:', dagshub.__version__)"
 
       - name: Run DVC Pipeline
@@ -93,5 +93,5 @@ jobs:
           DAGSHUB_USERNAME: kush2501
         run: |
           echo "Before dvc repro"
-          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_ACTION') is not None)"
+          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_TOKEN') is not None)"
           dvc repro
