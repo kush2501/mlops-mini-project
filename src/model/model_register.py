@@ -221,7 +221,7 @@ def main():
         logger.info("Model Registry Pipeline Started")
 
 
-         # -------------------- DagsHub Authentication -------------------- #
+        # -------------------- DagsHub Authentication -------------------- #
 
         os.environ["MLFLOW_TRACKING_USERNAME"] = "kush2501"
 
