@@ -107,13 +107,11 @@ def register_model(run_info):
 
 
 def promote_best_model(model_name, new_version):
-    """
-    Compare the newly registered model with the current Production model.
-    If the new model has better accuracy, move it to Production and archive
-    the old Production model. Otherwise keep it in Staging.
-    """
 
     try:
+        logger.info("=" * 60)
+        logger.info("Starting Model Comparison with Production")
+        logger.info("=" * 60)
 
         client = MlflowClient()
 
@@ -161,6 +159,10 @@ def promote_best_model(model_name, new_version):
             logger.info("No Production Model Found.")
             logger.info("Current Model Promoted to Production.")
 
+            logger.info("=" * 60)
+            logger.info("Model Comparison Completed")
+            logger.info("=" * 60)
+
             return
 
         # -----------------------------------
@@ -201,10 +203,19 @@ def promote_best_model(model_name, new_version):
             logger.info("Old Production Archived")
             logger.info("New Model Promoted to Production")
 
+
+            logger.info("=" * 60)
+            logger.info("Model Comparison Completed")
+            logger.info("=" * 60)
+
         else:
 
             logger.info("Current Production Model is Better")
             logger.info("New Model remains in Staging")
+
+            logger.info("=" * 60)
+            logger.info("Model Comparison Completed")
+            logger.info("=" * 60)
 
     except Exception:
 

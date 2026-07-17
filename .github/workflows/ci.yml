@@ -76,7 +76,7 @@ jobs:
         run: |
           echo "=========================================="
           echo "Starting DVC Pipeline..."
-          echo "Stages: Data -> Features -> Training -> Evaluation -> Model Registration"
+          echo "Stages: Data -> Features -> Training -> Evaluation -> Model Registration -> Model Comparision -> Promote Best Model"
           echo "=========================================="
           
           dvc repro
