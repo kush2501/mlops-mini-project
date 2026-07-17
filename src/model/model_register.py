@@ -220,6 +220,21 @@ def main():
         logger.info("=" * 60)
         logger.info("Model Registry Pipeline Started")
 
+
+         # -------------------- DagsHub Authentication -------------------- #
+
+        os.environ["MLFLOW_TRACKING_USERNAME"] = "kush2501"
+
+        token = os.getenv("DAGSHUB_TOKEN")
+
+        if token is None:
+            raise ValueError("DAGSHUB_TOKEN environment variable is not set.")
+
+        os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
+        # Register token with DagsHub client
+        dagshub.auth.add_app_token(token)
+
         # -------------------- DagsHub + MLflow -------------------- #
 
         mlflow.set_tracking_uri(

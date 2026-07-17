@@ -69,24 +69,6 @@ jobs:
         run: |
           python -m pytest tests/test_flask_app.py -v
 
-      - name: Debug Secrets
-        env:
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
-        run: |
-          if [ -z "$DAGSHUB_TOKEN" ]; then
-            echo "TOKEN NOT FOUND"
-            exit 1
-          else
-            echo "TOKEN FOUND"
-          fi
-
-      - name: Debug DagsHub Auth
-        env:
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
-        run: |
-          python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_TOKEN') is not None)"
-          python -c "import dagshub; print('DagsHub Version:', dagshub.__version__)"
-
       - name: Run DVC Pipeline
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
@@ -95,3 +77,10 @@ jobs:
           echo "Before dvc repro"
           python -c "import os; print('TOKEN EXISTS:', os.getenv('DAGSHUB_TOKEN') is not None)"
           dvc repro
+
+      - name: Register Model
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_ACTION }}
+          DAGSHUB_USERNAME: kush2501
+        run: |
+          python src/model/model_register.py
