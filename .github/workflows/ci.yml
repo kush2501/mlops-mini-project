@@ -56,18 +56,10 @@ jobs:
         run: |
           dvc version
           dvc doctor
-          
+            
       - name: Check Python Syntax
         run: |
           python -m compileall src
-      
-      - name: Run Unit Tests
-        run: |
-          python -m pytest tests -v
-
-      - name: Run Flask Tests
-        run: |
-          python -m pytest tests/test_flask_app.py -v
 
       - name: Run DVC Pipeline
         env:
@@ -76,11 +68,18 @@ jobs:
         run: |
           echo "=========================================="
           echo "Starting DVC Pipeline..."
-          echo "Stages: Data -> Features -> Training -> Evaluation -> Model Registration -> Model Comparision -> Promote Best Model"
           echo "=========================================="
-          
-          dvc repro
+
+          python -m dvc repro
 
           echo "=========================================="
           echo "DVC Pipeline completed successfully!"
           echo "=========================================="
+
+      - name: Run Unit Tests
+        run: |
+          python -m pytest tests -v
+
+      - name: Run Flask Tests
+        run: |
+          python -m pytest tests/test_flask_app.py -v
