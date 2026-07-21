@@ -1,4 +1,4 @@
-#!D:\MLOPS\mlops-mini-project\mlops_env\Scripts\python.exe
+#!D:\MLOPS\emotion-detection-using-mlflow-dvc\mlops_env\Scripts\python.exe
 __author__ = 'jszheng'
 import optparse
 import sys

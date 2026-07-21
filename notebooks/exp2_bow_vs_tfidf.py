@@ -20,8 +20,8 @@ import os
 
 import dagshub
 
-mlflow.set_tracking_uri('https://dagshub.com/kush2501/mlops-mini-project.mlflow')
-dagshub.init(repo_owner='kush2501', repo_name='mlops-mini-project', mlflow=True)
+mlflow.set_tracking_uri('https://dagshub.com/kush2501/emotion-detection-using-mlflow-dvc.mlflow')
+dagshub.init(repo_owner='kush2501', repo_name='emotion-detection-using-mlflow-dvc', mlflow=True)
 
 # Load the data
 df =  pd.read_csv("https://raw.githubusercontent.com/Giohanny/Twitter-Sentiment-Analysis/refs/heads/master/text_emotion.csv").drop(columns=['tweet_id','author'])

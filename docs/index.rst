@@ -1,9 +1,9 @@
-.. mlops-mini-project documentation master file, created by
+.. emotion-detection-using-mlflow-dvc documentation master file, created by
    sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-mlops-mini-project documentation!
+emotion-detection-using-mlflow-dvc documentation!
 ==============================================
 
 Contents:

@@ -1,4 +1,4 @@
-mlops-mini-project
+emotion-detection-using-mlflow-dvc
 ==============================
 
 A small mlops project

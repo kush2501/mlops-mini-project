@@ -249,12 +249,12 @@ def main():
         # -------------------- DagsHub + MLflow -------------------- #
 
         mlflow.set_tracking_uri(
-            "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
+            "https://dagshub.com/kush2501/emotion-detection-using-mlflow-dvc"
         )
 
         dagshub.init(
             repo_owner="kush2501",
-            repo_name="mlops-mini-project",
+            repo_name="emotion-detection-using-mlflow-dvc",
             mlflow=True
         )
 

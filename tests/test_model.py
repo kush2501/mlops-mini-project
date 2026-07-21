@@ -4,7 +4,7 @@ import mlflow.sklearn
 
 
 mlflow.set_tracking_uri(
-    "https://dagshub.com/kush2501/mlops-mini-project.mlflow"
+    "https://dagshub.com/kush2501/emotion-detection-using-mlflow-dvc.mlflow"
 )
 
 
