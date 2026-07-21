@@ -112,28 +112,41 @@ def train_model(X_train, y_train):
 
 def save_model(model):
     """
-    Save trained model.
+    Save trained model for:
+    1. MLflow / Pipeline (artifacts)
+    2. Flask Deployment (models)
     """
 
     try:
 
+        # -------------------- Artifacts -------------------- #
+
         ARTIFACTS_DIR = BASE_DIR / "artifacts"
         ARTIFACTS_DIR.mkdir(exist_ok=True)
 
-        MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
+        ARTIFACT_MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
 
-        with open(MODEL_PATH, "wb") as file:
+        with open(ARTIFACT_MODEL_PATH, "wb") as file:
             pickle.dump(model, file)
-            
 
-        logger.info(f"Model saved successfully at {MODEL_PATH}")
+        logger.info(f"Model saved to: {ARTIFACT_MODEL_PATH}")
 
+        # -------------------- Deployment -------------------- #
+
+        MODELS_DIR = BASE_DIR / "models"
+        MODELS_DIR.mkdir(exist_ok=True)
+
+        DEPLOYMENT_MODEL_PATH = MODELS_DIR / "model.pkl"
+
+        with open(DEPLOYMENT_MODEL_PATH, "wb") as file:
+            pickle.dump(model, file)
+
+        logger.info(f"Deployment model saved to: {DEPLOYMENT_MODEL_PATH}")
 
     except Exception:
 
         logger.exception("Failed to save model.")
         raise
-
 
 # -------------------- Main -------------------- #
 

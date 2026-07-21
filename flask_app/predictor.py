@@ -1,26 +1,20 @@
 import pickle
 from pathlib import Path
 
-import mlflow
-
-
 from .preprocessing import preprocess_text
-
-# -------------------- Tracking URI -------------------- #
-
-mlflow.set_tracking_uri(
-    "https://dagshub.com/kush2501/emotion-detection-using-mlflow-dvc")
 
 # -------------------- Project Root -------------------- #
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ----------------- Load Model ----------------- #
+# -------------------- Load Model -------------------- #
 
-model = mlflow.sklearn.load_model(
-    "models:/model/Production"
-)
+MODEL_PATH = BASE_DIR / "models" / "model.pkl"
 
+with open(MODEL_PATH, "rb") as file:
+    model = pickle.load(file)
+
+print("Model Loaded Successfully")
 print("Expected Features:", model.n_features_in_)
 
 # -------------------- Load Vectorizer -------------------- #
@@ -30,6 +24,7 @@ VECTORIZER_PATH = BASE_DIR / "artifacts" / "vectorizer.pkl"
 with open(VECTORIZER_PATH, "rb") as file:
     vectorizer = pickle.load(file)
 
+print("Vectorizer Loaded Successfully")
 print("Vocabulary Size:", len(vectorizer.vocabulary_))
 
 # -------------------- Predict -------------------- #
