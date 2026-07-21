@@ -95,7 +95,7 @@ def main()-> None:
 
     try:
 
-        logger.info("============= Data Ingestion Started =============")
+        logger.info("=============== Data Ingestion Started ===============")
 
         test_size = load_params("params.yaml")
         data_frame = load_dataset("https://raw.githubusercontent.com/Giohanny/Twitter-Sentiment-Analysis/refs/heads/master/text_emotion.csv")
