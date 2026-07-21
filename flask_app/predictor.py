@@ -15,7 +15,7 @@ mlflow.set_tracking_uri(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --------------------- Load Model --------------------- #
+# ----------------- Load Model ----------------- #
 
 model = mlflow.sklearn.load_model(
     "models:/model/Production"
