@@ -188,7 +188,7 @@ def main():
 
         # MLflow Tracking URI
         mlflow.set_tracking_uri(
-            "https://dagshub.com/kush2501/mlops-emotion-detection-using-mlflow-dvc"
+            "https://dagshub.com/kush2501/mlops-emotion-detection-using-mlflow-dvc.mlflow"
         )
 
         # Initialize DagsHub
